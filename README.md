@@ -5,7 +5,6 @@ Two-player online co-op for **FTL: Faster Than Light**. Each captain flies their
 > **This is a very early alpha, shared so more people can find bugs.**
 > Expect things to break. The furthest it has been played so far is sector 3. Please do not expect to finish a run yet, and please report what goes wrong.
 
-Current version: **v0.28.16** (not yet played by anyone other than the two original testers).
 
 ## What works today
 
@@ -138,4 +137,4 @@ This is an unofficial fan project. It is not affiliated with Subset Games or the
 
 It is built on [FTL: Hyperspace](https://github.com/FTL-Hyperspace/FTL-Hyperspace) 1.20.0 by the Hyperspace contributors, and is shared under the same Creative Commons Attribution-ShareAlike 4.0 licence. See `ATTRIBUTION.md`, `LICENSE.md` and the `licenses/` folder.
 
-Most of the code was written with AI assistance (ChatGPT and Claude) and tested by two players.
+Large parts of the code were written with AI assistance (ChatGPT and Claude) and tested by two players.
