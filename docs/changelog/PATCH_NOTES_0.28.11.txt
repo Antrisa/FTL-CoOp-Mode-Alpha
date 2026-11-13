@@ -1,0 +1,30 @@
+v0.28.11 — Friendly drone attacks and mixed friendly loadouts
+
+Root cause: prior supported() rejected every player with Drone Control before ARM.
+Friendly projectiles from SpaceDrone use DRONE_FIRE, not PROJECTILE_FIRE.
+
+Implementation
+- Permit friendly drone types 0,1,2,3,5,7 (defense/combat/system repair/anti-personnel/
+  hull repair/shield). Keep type 4 boarding and unknown types blocked.
+- Include equipped combat-drone weapon blueprints in the declaring player's ARM loadout.
+- Route DRONE_FIRE attack projectiles through the same ordered SHOT/SPAWN stream as guns.
+  Guest returns PREEMPT: native Hyperspace deletes its not-yet-inserted shot. We do not
+  Kill/delete/retain the callback userdata. Host runs the real projectile and sends
+  the visual to the guest; guest enemy damage remains suppressed and host-snapshotted.
+- Carry actual beam length, endpoints, damage and origin space. Drone attacks originate
+  in enemy space, independent of the other friendly ship's layout.
+- Enemy drones and local support/defense drones retain their native behavior.
+- Friendly multiple artillery allowed; enemy multiple artillery still rejected.
+- Empty offensive loadout allowed. Declared blueprint cap 16 covers guns+drones+artillery.
+- Setup STOP reasons now reach the waiting captain before a session exists. Repeated
+  STOP messages do not generate repeated rejection logs or an endless echo.
+- Mod/utility protocol 2811 rejects older game/utility combinations.
+- Native DLL unchanged from v0.28.9. Scene/reward fixes from v0.28.9/10 retained.
+
+Primary implementation references checked in pinned official Hyperspace source
+(commit 2540d807baef1d3654ff03a18560728b64ce3a45):
+Misc.cpp SpaceDrone::GetNextProjectile DRONE_FIRE chain callback and deletion contract;
+Drones.h DroneType; FTLGameWin32.h DroneBlueprint/SpaceDrone/BeamWeapon fields;
+CustomDamage.cpp SpaceManager::CreateBeam enemy-space creation.
+
+No Windows multiplayer run performed here. See START_HERE.txt for focused live tests.

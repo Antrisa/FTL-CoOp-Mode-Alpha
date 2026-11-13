@@ -1,0 +1,24 @@
+v0.28.10 — Reward continuation and F9 collision
+
+LOG FINDINGS
+The supplied v0.28.9 logs show a shared kill at sector 2 beacon 145,171.
+Both games eventually displayed DESTROYED_DEFAULT with the same reward text.
+Host reward opened first; guest reward opened at 21:09:45, after the host used
+local bypass at 21:09:39-40. Votes were rejected while events did not match.
+Guest used the bypass at 21:09:51 and left native voting OFF. At the next slaver
+beacon the guest progressed locally while the host continued voting; setup timed out.
+This is consistent with the shared pause holding up the guest death/reward sequence,
+not a new teleporter crash. No claim that all possible reward divergences are fixed.
+
+FIX
+Single normal Continue during acknowledged post-combat state executes locally.
+It does not require paired event text/token availability. The existing two-captain
+POST_READY / POST_RELEASE barrier still blocks travel until both reward sequences
+finish. Multi-option events and ordinary nonterminal Continue still vote normally.
+Removed F9 solo-voting toggle. F9 now belongs only to the ship-detail view.
+
+SCOPE
+Native DLL, protocol 288, combat damage, boarding and independent inventories unchanged.
+This does not make asynchronous reward screens appear simultaneously; close your
+local Continue and resume together so the delayed native reward can finish.
+The patch cannot retroactively reconcile a run already advanced via solo choices.

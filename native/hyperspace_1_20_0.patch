@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f7c143..958ceba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -369,3 +369,9 @@ if(USE_DISCORD)
+     target_compile_definitions(Hyperspace PRIVATE USE_DISCORD)
+     target_link_libraries(Hyperspace PRIVATE DiscordRpc::DiscordRpc)
+ endif()
++
++# Fleet transport/view and opt-in enemy-replica freeze; no third ship.
++target_sources(Hyperspace PRIVATE fleet_native/fleet_transport.cpp fleet_native/fleet_native_api.cpp fleet_native/fleet_video.cpp fleet_native/fleet_combat.cpp fleet_native/fleet_scene.cpp fleet_native/fleet_effects.cpp fleet_native/fleet_boarding.cpp)
++if(WIN32)
++    target_link_libraries(Hyperspace PRIVATE ws2_32)
++endif()
+diff --git a/Renderer.cpp b/Renderer.cpp
+index 6569ce7..781736a 100644
+--- a/Renderer.cpp
++++ b/Renderer.cpp
+@@ -26,7 +26,7 @@ HOOK_METHOD(CApp, SetupWindow, () -> void)
+ 
+     bool isUnderWINE = checkIfUnderWINE();
+ 
+-    if (argv.find("-opengl") != std::string::npos)
++    if (argv.find("-opengl") != std::string::npos && argv.find("--force-opengl") == std::string::npos)
+     {
+         hs_log_file("Warning command line argument `-opengl` is no longer supported!\nIf you are encountering issues with the auto-detection please report it to the Hyperspace team on Discord or on Github.\n");
+         ErrorMessage("Startup argument `-opengl` is no longer supported! (We now auto-detect your GPU configuration)\nPlease remove `-opengl` or I'll just keep complaining\n\nIf this is your first install of Hyperspace don't try random things and see the install guide at https://ftl-hyperspace.github.io/FTL-Hyperspace/\n");
+diff --git a/lua/LuaScriptInit.cpp b/lua/LuaScriptInit.cpp
+index 42fa73f..6ace160 100644
+--- a/lua/LuaScriptInit.cpp
++++ b/lua/LuaScriptInit.cpp
+@@ -1,4 +1,5 @@
+ #include "LuaScriptInit.h"
++#include "../fleet_native/fleet_native_api.h"
+ #include <string>
+ #include "luaGlobal.h"
+ 
+@@ -113,6 +114,7 @@ LuaScriptInit::LuaScriptInit()
+     luaopen_RapidXML(lua);
+     lua_pop(lua, 2);
+     removeDangerousStuff(lua);
++    fleet_register_transport(lua);
+ 
+     this->m_libScript->LoadTypeInfo(); // Preload all the SWIG typedata so we don't need to do it every time we want to push a class for a callback
+ 

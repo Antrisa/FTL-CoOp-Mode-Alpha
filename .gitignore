@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+FTL_HS*.log
+bridge_debug*.txt
+fleet_diagnostics*.txt
+fleet_faults*.txt
+*.bak

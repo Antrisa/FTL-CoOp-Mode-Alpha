@@ -1,0 +1,45 @@
+v0.28.14: systems listed below as blocked no longer end the run. A fight that cannot be
+shared becomes a separate fight at that beacon (each ship fights its own enemy copy).
+Shared enemies no longer surrender or escape. See docs/changelog/PATCH_NOTES_0.28.14.txt.
+
+v0.28.13: new Scene API 6 DLL; 30 Hz target (not guaranteed), crew visual interpolation, F10 sampling. Original FTL art, not HD replacements. UI workflow refreshed; gameplay support below retained.
+
+v0.28.13 addition: personal choices for the exact English vanilla black-market missile-sale station and its immediate confirmation. Other trading events remain shared until explicitly supported.
+
+v0.28.13 support scope (implemented; still requires live testing)
+
+FRIENDLY LOADOUTS
+- Different vanilla ship hulls/layouts, hull capacities and weapon loadouts: allowed.
+- Combat drones: laser and beam attacks use the host's shared-enemy damage authority.
+- Defense / anti-combat drones: native local defense, no duplicated interception.
+- System repair / anti-personnel drones: native local crew behavior.
+- Hull repair / shield drones: local owner only.
+- Multiple friendly artillery systems: allowed; friendly system state is not copied.
+- No guns / drone-only / non-attacking support ship: allowed.
+- Friendly cloaking and clone bays: already allowed as local systems in prior builds.
+- Inventory, reactor allocation and enemy targeting of friendly ships remain independent.
+
+LIMITS RETAINED
+- Player teleporter, hacking and mind control: blocked until their cross-ship effects
+  have explicit authoritative state and lifecycle support.
+- Boarding drones and unknown drone types: blocked. They transfer/create crew across
+  ships and cannot be fixed by merely forwarding a projectile.
+- Enemy drone types: existing defense and combat support only. Enemy crew drones,
+  hull repair and shield drones remain blocked by the existing validator.
+- Enemy teleporters: host-only boarding from v0.28.8 remains experimental.
+- Enemy cloaking, clone bays, mind control and multiple artillery remain blocked.
+- Not every vanilla ship is supported yet: an unsupported installed/equipped system
+  can still block combat, even when unpowered.
+- Partner orbital drone bodies/positions are not replicated as a second drone object.
+  The shared attack/damage is relayed; local friendly drones remain native objects.
+- Multiverse/custom content is not validated.
+
+BEFORE CALLING THIS 1.0
+1. Validate supported mixed ships, simultaneous fire, drone types, reward chains,
+   sector transitions and repeated fights across full runs on both host roles.
+2. Add player boarding/teleport with explicit crew ownership, recall and cleanup.
+3. Add authoritative hacking and mind-control effects and remaining enemy systems.
+4. Cover remaining vanilla events: surrender/escape/quests/stores/crew death and
+   multi-stage flagship outcomes without separate progression.
+5. Validate save/continue/reconnect behavior and packaging on clean installations.
+These are remaining work items, not features claimed by this patch.

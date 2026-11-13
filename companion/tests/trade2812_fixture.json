@@ -1,0 +1,58 @@
+[
+  {
+    "token": 6375888,
+    "seed": 7062026,
+    "level": 0,
+    "position": [
+      621,
+      405
+    ],
+    "text": "There is a black market hub here. You receive a message, \"These are dangerous times. If you have extra military-grade explosives, we'll gladly pay you for them.\"",
+    "choices": [
+      {
+        "type": 0,
+        "text": "Sell 5 missiles for 15 scrap."
+      },
+      {
+        "type": 1,
+        "text": "Sell 10 missiles for 30 scrap."
+      },
+      {
+        "type": 1,
+        "text": "Sell 15 missiles for 45 scrap."
+      },
+      {
+        "type": 0,
+        "text": "Ignore the station."
+      }
+    ]
+  },
+  {
+    "token": 14630508,
+    "seed": 7062026,
+    "level": 0,
+    "position": [
+      621,
+      405
+    ],
+    "text": "There is a black market hub here. You receive a message, \"These are dangerous times. If you have extra military-grade explosives, we'll gladly pay you for them.\"",
+    "choices": [
+      {
+        "type": 1,
+        "text": "Sell 5 missiles for 15 scrap."
+      },
+      {
+        "type": 1,
+        "text": "Sell 10 missiles for 30 scrap."
+      },
+      {
+        "type": 1,
+        "text": "Sell 15 missiles for 45 scrap."
+      },
+      {
+        "type": 0,
+        "text": "Ignore the station."
+      }
+    ]
+  }
+]

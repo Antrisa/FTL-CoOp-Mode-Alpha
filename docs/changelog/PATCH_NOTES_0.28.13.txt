@@ -1,0 +1,72 @@
+FTL Fleet Co-op v0.28.13 - Ship motion and companion cleanup
+
+INSTALL ON BOTH PCs - NEW DLL REQUIRED
+1. Close FTL, Fleet Link and FTL Manager. Extract this complete ZIP to a NEW folder.
+2. Disable the old co-op mod; apply ONLY companion/FleetCoop_Ingame_Panel_v0.28.13.ftl.
+3. Close FTL Manager. Start companion/Start_Fleet_Link.bat on both PCs and connect.
+4. Enable game link on both companions (same bridge setting, renamed).
+5. Both run companion/Start_FTL_Coop.bat. This backs up/replaces/verifies the DLL
+   and launches FTL. Merely updating the mod in the manager is NOT sufficient.
+   Manual alternative: replace Hyperspace.dll with native_bin/Hyperspace.dll after
+   applying the mod. CHECK_DLL.ps1 / VERIFY_BOTH_PCS.txt contain the exact new hash.
+Vanilla + custom Hyperspace 1.20.0. Do not upgrade to stock Hyperspace or Multiverse.
+Both utility and game mod use build/protocol 2813. Native Scene API is now 6.
+
+WHAT CHANGED
+- Native capture and Lua scene dispatch target 30 updates/second at 60 game ticks,
+  up from a 10/second dispatch cap. Relay and local delivery limits adjusted to fit.
+  Actual performance depends on game FPS, CPU, network and acknowledgment timing.
+- Local scene reads use larger chunks and shorter receive waits. Latest-frame
+  replacement and one outstanding scene per local direction are retained;
+  combat/pause/jump control still precedes unsent scene snapshots.
+- Compatible crew-sprite translations blend between received positions. This is
+  visual only, bounded to 16-80 ms; stale frames, topology/UV/color changes,
+  large displacement and different layouts snap to the authoritative frame.
+  No prediction of gameplay, health, damage, doors or projectile hits.
+- F10 selects crisp (nearest) or smooth (linear) texture sampling for friendly
+  ships only. The texture settings and binding are restored after drawing.
+  This uses original FTL textures; it is NOT new HD artwork or extra source detail.
+- F9 still cycles balanced / your-ship detail / partner detail layouts. Neither
+  F9 nor F10 changes voting, pause, combat authority, inventories or crew input.
+- Dark companion theme with Fleet overview, Event details, Controls & help, and
+  Diagnostics. Removed obsolete manual jump-plan controls from the window.
+  Network tests, focus inspection and logs are in Diagnostics. Manual event
+  voting remains a clearly labeled fallback. Host-only buttons remain host-only.
+- Updated F8 lobby/status/in-run help, personal trade/confirmation guidance,
+  version labels, map status and misleading F6 cancellation wording.
+- Includes v0.28.12 personal missile-station trading and all previous fixes.
+
+CONTROLS
+Space: pause / mark ready; both captains ready resumes play.
+F6: manual combat setup/hold. Combat normally starts automatically; not a solo toggle.
+F7: partner inspector; opens paused. F7 / Escape closes it.
+F8: connection/status and manual event-voting panel.
+F9: view layout only. DOES NOT enable solo play or disable event voting.
+F10: crisp / smooth texture sampling, only when the ship view is visible.
+F13-F15: internal input bridge keys; do not use manually.
+Normal event clicks vote and apply after both native votes; ties randomly select
+one of the two submitted options. In F8/manual fallback, host applies the choice.
+Personal missile-station sale: close F8; sell or ignore independently and click your
+own Continue. Finish both event screens before readying or jumping.
+
+TEST IN THIS ORDER
+1. Both connect with the new DLL and confirm normal ship interiors appear.
+2. Move one crew member across several rooms, then several crew at once. Watch
+   both directions. Compare motion delay and stepping with the previous build.
+3. Press F10 on each PC to compare crisp/smooth. Cycle all F9 views. Select crew,
+   move crew, open doors and target weapons; hitboxes should still match the local ship.
+4. Check F8/companion wording and tabs. Confirm F9/F10 never dismiss an event or
+   disable votes. Check Diagnostics still opens the log and sends a bridge test.
+5. Test one sells missiles / the other ignores; verify separate inventory changes.
+6. Finish an ordinary voted event, coordinate pause and jump, then complete two
+   fights including simultaneous weapons/drone fire. Watch control responsiveness.
+If graphics or movement regress, preserve both FTL_HS.log, bridge_debug.txt and
+fleet_diagnostics.txt plus both screenshots and the F9/F10 mode used.
+
+VALIDATION
+297 Python/Lua mock and network-loopback tests passed. Portable C++ scene codec /
+layout and crew smoothing checks passed. Windows PE32 DLL cross-build succeeded
+with the pinned official toolchain and telemetry disabled. All four companion tabs
+were instantiated and visually inspected in a Linux dummy-display preview.
+No live Windows FTL/OpenGL game or two-PC performance validation was available.
+This remains an experimental build, not a validated full-game 1.0 release.

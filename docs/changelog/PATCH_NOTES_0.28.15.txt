@@ -1,0 +1,42 @@
+FTL Fleet Co-op v0.28.15 - Reward barrier fix
+
+INSTALL ON BOTH PCs - SAME DLL AS BEFORE, NEW .ftl AND NEW COMPANION
+1. Close FTL, Fleet Link and FTL Manager. Use this complete package in a NEW folder.
+2. Disable the old co-op mod; apply ONLY companion/FleetCoop_Ingame_Panel_v0.28.15.ftl.
+3. Start companion/Start_Fleet_Link.bat on both PCs and connect. Enable game link.
+4. Both run companion/Start_FTL_Coop.bat. The DLL is unchanged (same hash).
+Both utility and game mod now use build/protocol 2815; both captains must update.
+
+WHY
+In the 12 Nov v0.28.14 test both captains reached sector 3 and then could not
+jump. The last sector-2 fight was at the exit beacon. After the reward screen,
+both ships jumped to the next sector through the sector map before the
+"both rewards finished" release arrived. The sector-exit jump is not covered by
+the fleet jump vote, so nothing stopped it. The unfinished reward barrier then
+stayed active in the new sector and refused every jump vote.
+
+WHAT CHANGED
+1. The reward barrier is tied to its beacon. Once a ship has left that beacon
+   the barrier is dropped (log: COMBAT22|POST_ABANDONED|...|left_beacon).
+2. The relay drops a stale barrier when a captain arms a fight at another
+   beacon, so the next shared fight is not refused either.
+3. If no reward screen appears within about 15 seconds of running time after a
+   shared fight, the mod stops waiting for one (log: POST_EVENT_ASSUMED).
+Everything from v0.28.14 is kept: surrender/escape lock, separate fights, F6.
+
+RESULTS FROM THE v0.28.14 LIVE TEST (12 Nov, about 20 minutes)
+- 7 shared fights completed; 7 of 7 logged OUTCOME_LOCK|OK|box=false.
+- 1 clone-bay enemy became a separate fight and shared combat resumed after.
+- Sector 3 reached. Blocked there by the bug fixed above.
+- Known cosmetic issue: on the guest, the guest's own shots can look like
+  misses while the host counts hits. Damage is correct. Not fixed here.
+
+TEST
+Play on from a new run. When you finish a fight at an exit beacon and jump to
+the next sector, confirm you can still vote a jump there.
+Collect FTL_HS.log, bridge_debug.txt and fleet_diagnostics.txt from both PCs.
+
+VALIDATION
+Lua syntax of all 16 scripts checked with Lua 5.3. Lua mock test: 28 checks
+pass. New relay test tests/test_post_barrier2815.py passes. The older 297
+lupa-based tests were NOT re-run. No live Windows FTL test of this build.

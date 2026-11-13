@@ -1,0 +1,27 @@
+FTL Fleet Co-op v0.28.9 — Ship clarity and detail views
+
+The live partner uses original FTL textures and transmitted draw geometry, not a
+low-resolution video image. Small stacked ships still have fewer display pixels
+than a full-size vanilla ship; this patch does not invent higher-resolution art.
+
+CHANGES
+- Replay partner geometry in original coordinates under one floating-point scale.
+  Previously triangle coordinates were truncated AFTER shrinking, collapsing thin
+  room geometry or misaligning it with the textures.
+- Replay eligible solid rectangular geometry with floating-point GL_DrawRect.
+- F9 cycles balanced -> your ship detail -> partner detail -> balanced.
+  Both full hulls remain visible. A detail slot is 306 pixels high rather than 236;
+  the other is 164 pixels high. Exact visible size depends on ship aspect ratio.
+- Crew input uses the same scale and position as the displayed local ship.
+  The partner remains read-only; HUD and enemy targeting retain their coordinates.
+- View preference is local and resets to balanced on new/load initialization.
+- New native Scene API 5. This mod deliberately rejects older scene DLLs.
+
+No change to combat, boarding, pause, voting, scene payloads or capture frequency.
+Network protocol remains 288. The opening-event/map mismatch with a new player
+reported after v0.28.8 is not diagnosed or fixed by this display patch.
+
+NEEDS TWO-PC VALIDATION
+Visual quality, actual game input and native rendering state need in-game testing.
+Original FTL art limits fine detail. If you want BOTH ships much larger at once,
+that needs more screen space or a different camera/layout rather than upscaling art.

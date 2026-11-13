@@ -1,0 +1,72 @@
+FTL Fleet Co-op v0.28.14 - Separate fights instead of dead runs
+
+INSTALL ON BOTH PCs - SAME DLL AS v0.28.13, NEW .ftl AND NEW COMPANION
+1. Close FTL, Fleet Link and FTL Manager. Use this complete package in a NEW folder.
+2. Disable the old co-op mod; apply ONLY companion/FleetCoop_Ingame_Panel_v0.28.14.ftl.
+3. Start companion/Start_Fleet_Link.bat on both PCs and connect. Enable game link.
+4. Both run companion/Start_FTL_Coop.bat. The DLL is unchanged from v0.28.13
+   (same hash), so it is verified and left in place.
+Both utility and game mod now use build/protocol 2814. A v0.28.13 companion or
+mod will be refused, so both captains must update together.
+
+WHY
+In the 12 Nov v0.28.13 test (sector 2, slaver ship) the host was offered a
+surrender at 4/10 enemy hull and the guest was not. Each game rolls an enemy's
+surrender and escape thresholds on its own. The vote needs the same screen on
+both PCs, so the host's choice was rejected until the session ended.
+
+WHAT CHANGED
+1. Surrender and escape are switched off for shared enemies.
+   When a shared fight starts, each game loads a textless event
+   (FLEET_COOP_COMBAT_SYNC) that uses Hyperspace's own <disableSurrender> and
+   <disableEscape> tags on its enemy. Shared enemies now fight to the end.
+   Look for "COMBAT22|OUTCOME_LOCK|OK|box=false" in FTL_HS.log.
+2. A failed or unsupported shared fight becomes a SEPARATE FIGHT.
+   Before: "return to menu", which ended the run. Now each ship keeps its own
+   copy of the enemy for the rest of that beacon and fights it normally.
+   This covers unsupported enemy systems (cloaking, clone bay, mind control,
+   crew/boarding drones, multiple artillery), unsupported player systems,
+   setup timeouts and link loss in the middle of a fight.
+   Nothing is copied between ships. Shared combat returns at the next beacon.
+3. During a separate fight, event screens at that beacon are personal.
+   Rewards, surrender offers and follow-up choices are clicked normally by each
+   captain. No partner vote is needed or possible there.
+4. F6 with an event screen open splits the current beacon.
+   If one captain ever gets a screen the other does not, either captain presses
+   F6: both games switch that beacon to separate play. F6 with no event open
+   keeps its old meaning (manual combat setup).
+
+NOT CHANGED
+- No DLL change. Native APIs, scene path, pause, jump voting and the keystroke
+  bridge for event choices are as in v0.28.13.
+- The list of systems that can be SHARED is unchanged; unsupported ones now fall
+  back to separate fights instead of blocking.
+- Do not buy a teleporter, hacking or mind control for your own ship if you want
+  shared fights: every fight would then be separate.
+
+KNOWN LIMITS
+- In a separate fight the pause barrier still applies: when one captain opens an
+  event, map or menu, both games hold until both press Space.
+- The flagship has multiple artillery, so it will be fought separately. This is
+  untested.
+- If "OUTCOME_LOCK" logs box=true, the textless event opened an empty screen.
+  Close it and report it.
+
+TEST IN THIS ORDER
+1. Start a run and reach the first fight. Check both logs for OUTCOME_LOCK|OK.
+2. Play on. When you meet a cloaking ship (common from sector 3) or any other
+   unsupported enemy, expect the banner "SEPARATE FIGHT: enemy_system_..." and
+   fight it out on both PCs. Then jump together and confirm the next fight is
+   shared again.
+3. During a separate fight, click your own reward screens normally.
+4. Once, on an ordinary event, press F6 on one PC and confirm both games show
+   the separate banner and can choose independently.
+Collect FTL_HS.log, bridge_debug.txt and fleet_diagnostics.txt from both PCs.
+
+VALIDATION
+Lua syntax of all 16 scripts checked with Lua 5.3. A mock test
+(companion/tests/lua_mocks/test_separate_fights.lua, 21 checks) covers the new
+fallback, the event lock call and the F6 split. The existing 297 Python/Lua
+tests were NOT re-run for this release: they need the lupa package, which was
+not available where this was built. Version strings in those tests were updated
+without running them. No live Windows FTL test has been done.

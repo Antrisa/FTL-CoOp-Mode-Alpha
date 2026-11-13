@@ -1,0 +1,58 @@
+FTL Fleet Co-op v0.28.8 — Experimental host-only enemy boarding
+
+INSTALL ON BOTH PCs
+1. Close FTL, Fleet Link and FTL Manager.
+2. Extract the entire ZIP into a NEW folder; keep companion and native_bin together.
+3. In FTL Manager disable the previous co-op mod and apply ONLY the included
+   companion/FleetCoop_Ingame_Panel_v0.28.8.ftl (vanilla; Multiverse stays off).
+   Close FTL Manager after applying.
+4. Start companion/Start_Fleet_Link.bat from this new folder on both PCs and connect.
+5. Start companion/Start_FTL_Coop.bat on both PCs and select each FTLGame.exe.
+   This backs up the installed DLL, installs the NEW DLL and launches with --force-opengl.
+   Use this launcher after applying mods so the manager does not overwrite the custom DLL.
+   This release DOES require the new DLL on BOTH PCs. Start fresh runs for this test.
+
+Expected Hyperspace.dll SHA256:
+328BDCE49392E4D3030B9ECDC56C2CE5C8828B9C7BDE999254170CBD772522DE
+
+WHAT CHANGED
+- Enemy teleporter encounters can start when the new native boarding API is present.
+- The HOST is the only boarding target in this experimental version. The guest does
+  not receive a second boarding party. Enemy guns still target each friendly ship independently.
+- A persistent enemy crew roster survives teleporting, recall and native crew cleanup.
+- Away crew replicas are hidden and do not simulate as duplicate boarders on the guest.
+- Combat completion includes the final crew state, distinguishes crew-kill from hull
+  destruction, and remains acknowledged by both games.
+- Surviving boarders on the host must be defeated before post-combat jump readiness.
+- Enemy teleports are held while the local co-op connection awaits its combat role.
+
+TEST IN ORDER
+1. Reach an enemy with a teleporter. Both games should enter combat without SETUP_REJECTED.
+2. Let it board. Only the host should receive boarders; the guest should see them on the
+   partner ship view, not attacking their own ship. Check enemy crew disappear from the
+   enemy interior on both screens while away.
+3. If it recalls surviving crew, check they return on both enemy views without duplication.
+4. Kill boarders on the host. Check their deaths are reflected on the guest enemy view.
+5. In a separate encounter, destroy the enemy hull while boarders remain aboard the host.
+   Finish the reward windows, defeat the remaining boarders, then vote to jump.
+6. If possible, kill all enemy crew without destroying the hull. Both games should finish
+   the crew-kill encounter. Then test the next combat and simultaneous weapon fire.
+
+If anything stalls, do not keep pressing keys. Preserve both FTL_HS.log,
+bridge_debug.txt and fleet_diagnostics.txt and note which test step failed.
+
+LIMITS
+This is an experimental Windows build, not live-game validated here.
+Boarding targets the host only. Choosing the guest or splitting parties is not implemented.
+Player teleporters, boarding drones, enemy clone bays and mind control remain unsupported.
+Existing restrictions on other systems remain. Sector voting is not added by this patch.
+
+VALIDATION
+266 automated Python/Lua tests passed, including terminal crew state, acknowledgement
+retries, native DLL gating, roomless boarding states and the remaining-boarders jump hold.
+Portable C++ effects and boarding tests passed: stable roster, hide/recall/death/transit,
+non-replaceable crew identities, removed-crew tombstones and no premature party release.
+The real native hooks compiled against pinned Hyperspace 1.20.0 headers using the exact
+previous official toolchain image configuration. Output is a Windows PE32 i386 DLL;
+its imported DLL list matches the previous build. Lua syntax and ZIP integrity checked.
+Mocks do not verify native FTL engine lifecycle, animations or actual two-PC gameplay.

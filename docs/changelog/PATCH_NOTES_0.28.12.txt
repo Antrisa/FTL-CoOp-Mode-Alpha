@@ -1,0 +1,46 @@
+FTL Fleet Co-op v0.28.12 - Personal Missile Trades
+
+Confirmed from both supplied logs: at beacon 621,405, Sell 5 missiles was
+available for the host and disabled for the guest. Old exact comparison included
+this availability flag and rejected even both Ignore votes.
+
+FIX
+- The exact vanilla black-market missile-sale event is now personal: sell 5/10/15
+  (if FTL permits it) or ignore independently. Native FTL changes only your inventory.
+- Its next single Continue confirmation is personal too, scoped to the same beacon
+  and current trade. Permission ends when the event closes, changes context, or
+  presents an unexpected branch. Ordinary single Continue screens are not bypassed.
+- F8 and the in-game overlay explain personal trading; no shared ballot is issued.
+- Other identical shared events tolerate differences in normal disabled rows, but
+  only choices available to both captains can receive a shared vote. Different
+  event text, labels, ordering, special choice types, or beacons remain blocked.
+- Local event screens cancel pending jump votes and reject jump prepare/commit.
+  Shared pause still waits for both event screens to close and both captains ready.
+
+SCOPE
+This explicitly supports the observed English vanilla missile-selling station.
+It does not turn all shops, resource offers, blue choices or surrender events into
+personal events. Those need individual classification before enabling solo choices.
+No inventory sharing, forced event dismissal, or global voting bypass was added.
+
+INSTALL ON BOTH PCs
+Close both games, Fleet Link and FTL Manager. Extract to a NEW folder.
+Disable the old co-op mod and apply only companion/FleetCoop_Ingame_Panel_v0.28.12.ftl.
+Close the manager. Start this package's Start_Fleet_Link.bat, connect, then use
+Start_FTL_Coop.bat. Both mod and utility must be v0.28.12 (protocol 2812).
+The Hyperspace DLL is unchanged from v0.28.9 through v0.28.11; no new DLL required.
+The launcher verifies/restores the included custom DLL if the manager overwrote it.
+Keep vanilla Hyperspace 1.20.0; Multiverse stays disabled.
+Do not hot-replace files while playing. Existing-save recovery is not verified.
+
+TEST
+1. At the black-market missile station, close F8. One captain sells while the other
+   ignores. Each clicks their own result Continue. Check only the seller loses
+   missiles and gains scrap. Disabled sales must remain disabled by native FTL.
+2. Leave one player's trade open: the other must not be able to jump away alone.
+3. Finish both trades, ready/unpause together, then vote for the same next beacon.
+4. At an ordinary shared event, confirm both votes are still needed.
+5. Complete another fight and reward sequence with different ships/drone loadouts.
+
+If stuck, keep both FTL_HS.log, bridge_debug.txt and fleet_diagnostics.txt,
+plus screenshots of each event. Do not force-dismiss one player's shared event.

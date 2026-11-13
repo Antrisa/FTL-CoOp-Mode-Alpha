@@ -1,0 +1,47 @@
+FTL Fleet Co-op v0.28.16 - Local link fix (fights no longer split at random)
+
+INSTALL ON BOTH PCs - SAME DLL AS BEFORE, NEW .ftl AND NEW COMPANION
+1. Close FTL, Fleet Link and FTL Manager. Use this complete package in a NEW folder.
+2. Disable the old co-op mod; apply ONLY companion/FleetCoop_Ingame_Panel_v0.28.16.ftl.
+3. Start companion/Start_Fleet_Link.bat on both PCs and connect. Enable game link.
+4. Both run companion/Start_FTL_Coop.bat. The DLL is unchanged (same hash).
+Both utility and game mod now use build/protocol 2816; both captains must update.
+
+WHY
+In the 12 Nov v0.28.15 test, 4 of 6 shared fights turned into separate fights.
+Each time, the guest's companion logged "Local game transport failed:
+TimeoutError: timed out" and the guest's game reconnected a second later.
+v0.28.13 had shortened the companion's socket timeout to the game from 20 ms to
+5 ms, and that timeout also applied to sending. A ship-view frame is 70-80 KB,
+more than the game reads in one frame, so any send that was not drained within
+5 ms dropped the link and split the fight. (Before v0.28.14 the same drop would
+have ended the run.)
+
+WHAT CHANGED (companion/fast_local.py only)
+1. Reading from the game still polls every 5 ms, but sending is no longer under
+   that deadline. A send may wait up to 10 seconds before the link is given up.
+2. If the game is not draining its socket, replaceable updates (ship view,
+   partner state) are skipped for that round instead of failing the link.
+3. The amount of data that can queue behind a stalled game is capped, so pause,
+   jump and combat messages are not stuck behind old ship-view frames.
+No Lua logic changed; the .ftl differs only in version labels.
+
+RESULTS FROM THE v0.28.15 LIVE TEST (12 Nov, about 18 minutes)
+- 6 shared fights started; 2 completed shared, 4 split (cause above).
+- Surrender/escape lock: 6 of 6 OK, no empty screen.
+- No jump was blocked.
+- Partner drones: the drone bodies have never been drawn on the partner's
+  screen; only their shots are, and only in a shared fight. With 4 of 6 fights
+  split, most of the guest's drone fire was not visible to the host.
+
+TEST
+Play as before. In fleet_diagnostics.txt there should be no "Local game
+transport failed ... TimeoutError" lines, and in FTL_HS.log no
+"SEPARATE_FIGHT|MIDFIGHT|game_reconnected" or "...native_link_unavailable".
+Collect all three logs from both PCs.
+
+VALIDATION
+New test tests/test_local_link2816.py simulates a game that stops reading for
+1.5 s: the v0.28.15 link code fails it with the same "timed out" error seen
+live; the new code passes. Relay test and 28 Lua mock checks pass. The older
+297 lupa-based tests were NOT re-run. No live Windows FTL test of this build.
