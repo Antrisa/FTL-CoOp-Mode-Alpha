@@ -59,7 +59,7 @@ Both players need:
 ## Install (both players)
 
 1. Close FTL and Slipstream.
-2. Download the release zip and extract it to a new folder. Keep the folders inside it together.
+2. Download the mod: use the zip on the [Releases page](https://github.com/Antrisa/FTL-CoOp-Mode-Alpha/releases) if there is one, or [download this repository as a zip](https://github.com/Antrisa/FTL-CoOp-Mode-Alpha/archive/refs/heads/main.zip). Extract it to a new folder and keep the folders inside it together.
 3. In Slipstream, add `companion\FleetCoop_Ingame_Panel_v0.28.16.ftl` to your mods, tick it **below Hyperspace**, and click Patch. Leave Hyperspace ticked. Do not tick any other gameplay mods.
 4. Close Slipstream.
 
@@ -107,7 +107,7 @@ Keep FTL as the active window while an event choice is being applied.
 
 ## Reporting bugs
 
-Please open an issue in this repository and attach, from **both** players:
+Please open an [issue](https://github.com/Antrisa/FTL-CoOp-Mode-Alpha/issues) in this repository, or message the author on Discord, and attach, from **both** players:
 
 - `FTL_HS.log` from the FTL game folder
 - `bridge_debug.txt` and `fleet_diagnostics.txt` from the `companion` folder
